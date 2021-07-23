@@ -1,20 +1,19 @@
 package me.jellysquid.mods.sodium.client.render.chunk.format.xhfp;
 
-import java.nio.ByteBuffer;
-
 import me.jellysquid.mods.sodium.client.model.vertex.buffer.VertexBufferView;
-import me.jellysquid.mods.sodium.client.model.vertex.buffer.VertexBufferWriterNio;
+import me.jellysquid.mods.sodium.client.model.vertex.buffer.VertexBufferWriterUnsafe;
 import me.jellysquid.mods.sodium.client.render.chunk.format.ChunkModelVertexFormats;
 import me.jellysquid.mods.sodium.client.render.chunk.format.MaterialIdHolder;
 import me.jellysquid.mods.sodium.client.render.chunk.format.ModelVertexSink;
 import me.jellysquid.mods.sodium.client.util.Norm3b;
-
 import net.minecraft.util.math.Vec3f;
+import org.lwjgl.system.MemoryUtil;
 
-public class XHFPModelVertexBufferWriterNio extends VertexBufferWriterNio implements ModelVertexSink {
+
+public class XHFPModelVertexBufferWriterUnsafe extends VertexBufferWriterUnsafe implements ModelVertexSink {
     private MaterialIdHolder idHolder;
 
-    public XHFPModelVertexBufferWriterNio(VertexBufferView backingBuffer, MaterialIdHolder idHolder) {
+    public XHFPModelVertexBufferWriterUnsafe(VertexBufferView backingBuffer, MaterialIdHolder idHolder) {
         super(backingBuffer, ChunkModelVertexFormats.EXTENDED);
 
         this.idHolder = idHolder;
@@ -63,31 +62,29 @@ public class XHFPModelVertexBufferWriterNio extends VertexBufferWriterNio implem
 
     private void writeQuadInternal(float posX, float posY, float posZ, int color,
                                    float u, float v, int light, short materialId, short renderType, int chunkId) {
-        int i = this.writeOffset;
+        long i = this.writePointer;
 
         vertexCount++;
         // NB: uSum and vSum must already be incremented outside of this function.
 
-        ByteBuffer buffer = this.byteBuffer;
+        MemoryUtil.memPutShort(i + 0, XHFPModelVertexType.encodePosition(posX));
+        MemoryUtil.memPutShort(i + 2, XHFPModelVertexType.encodePosition(posY));
+        MemoryUtil.memPutShort(i + 4, XHFPModelVertexType.encodePosition(posZ));
+        MemoryUtil.memPutShort(i + 6, (short) chunkId);
 
-        buffer.putShort(i + 0, XHFPModelVertexType.encodePosition(posX));
-        buffer.putShort(i + 2, XHFPModelVertexType.encodePosition(posY));
-        buffer.putShort(i + 4, XHFPModelVertexType.encodePosition(posZ));
-        buffer.putShort(i + 6, (short) chunkId);
+        MemoryUtil.memPutInt(i + 8, color);
 
-        buffer.putInt(i + 8, color);
+        MemoryUtil.memPutShort(i + 12, XHFPModelVertexType.encodeBlockTexture(u));
+        MemoryUtil.memPutShort(i + 14, XHFPModelVertexType.encodeBlockTexture(v));
 
-        buffer.putShort(i + 12, XHFPModelVertexType.encodeBlockTexture(u));
-        buffer.putShort(i + 14, XHFPModelVertexType.encodeBlockTexture(v));
-
-        buffer.putInt(i + 16, XHFPModelVertexType.encodeLightMapTexCoord(light));
+        MemoryUtil.memPutInt(i + 16, XHFPModelVertexType.encodeLightMapTexCoord(light));
 
         // NB: We don't set midTexCoord, normal, and tangent here, they will be filled in later.
         // block ID
-        buffer.putShort(i + 32, materialId);
-        buffer.putShort(i + 36, renderType);
-        buffer.putShort(i + 38, (short) 0);
-        buffer.putShort(i + 40, (short) 0);
+        MemoryUtil.memPutShort(i + 32, materialId);
+        MemoryUtil.memPutShort(i + 36, renderType);
+        MemoryUtil.memPutShort(i + 38, (short) 0);
+        MemoryUtil.memPutShort(i + 40, (short) 0);
 
         if (vertexCount == 4) {
             // TODO: Consider applying similar vertex coordinate transformations as the normal HFP texture coordinates
@@ -95,10 +92,10 @@ public class XHFPModelVertexBufferWriterNio extends VertexBufferWriterNio implem
             short midV = (short)(65536.0F * (vSum * 0.25f));
             int midTexCoord = (midV << 16) | midU;
 
-            buffer.putInt(i + 20, midTexCoord);
-            buffer.putInt(i + 20 - STRIDE, midTexCoord);
-            buffer.putInt(i + 20 - STRIDE * 2, midTexCoord);
-            buffer.putInt(i + 20 - STRIDE * 3, midTexCoord);
+            MemoryUtil.memPutInt(i + 20, midTexCoord);
+            MemoryUtil.memPutInt(i + 20 - STRIDE, midTexCoord);
+            MemoryUtil.memPutInt(i + 20 - STRIDE * 2, midTexCoord);
+            MemoryUtil.memPutInt(i + 20 - STRIDE * 3, midTexCoord);
 
             vertexCount = 0;
             uSum = 0;
@@ -108,28 +105,27 @@ public class XHFPModelVertexBufferWriterNio extends VertexBufferWriterNio implem
             // Implementation based on the algorithm found here:
             // https://github.com/IrisShaders/ShaderDoc/blob/master/vertex-format-extensions.md#surface-normal-vector
 
-            currentQuad.buffer = this.byteBuffer;
-            currentQuad.writeOffset = this.writeOffset;
-            NormalHelper.computeFaceNormal(normal, currentQuad, false);
+            currentQuad.writePointer = this.writePointer;
+            NormalHelper.computeFaceNormal(normal, currentQuad, true);
             int packedNormal = NormalHelper.packNormal(normal, 0.0f);
 
-            buffer.putInt(i + 28, packedNormal);
-            buffer.putInt(i + 28 - STRIDE, packedNormal);
-            buffer.putInt(i + 28 - STRIDE * 2, packedNormal);
-            buffer.putInt(i + 28 - STRIDE * 3, packedNormal);
+            MemoryUtil.memPutInt(i + 28, packedNormal);
+            MemoryUtil.memPutInt(i + 28 - STRIDE, packedNormal);
+            MemoryUtil.memPutInt(i + 28 - STRIDE * 2, packedNormal);
+            MemoryUtil.memPutInt(i + 28 - STRIDE * 3, packedNormal);
 
             // Capture all of the relevant vertex positions
-            float x0 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 0 - STRIDE * 3));
-            float y0 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 2 - STRIDE * 3));
-            float z0 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 4 - STRIDE * 3));
+            float x0 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 0 - STRIDE * 3));
+            float y0 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 2 - STRIDE * 3));
+            float z0 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 4 - STRIDE * 3));
 
-            float x1 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 0 - STRIDE * 2));
-            float y1 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 2 - STRIDE * 2));
-            float z1 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 4 - STRIDE * 2));
+            float x1 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 0 - STRIDE * 2));
+            float y1 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 2 - STRIDE * 2));
+            float z1 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 4 - STRIDE * 2));
 
-            float x2 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 0 - STRIDE));
-            float y2 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 2 - STRIDE));
-            float z2 = XHFPModelVertexType.decodePosition(buffer.getShort(i + 4 - STRIDE));
+            float x2 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 0 - STRIDE));
+            float y2 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 2 - STRIDE));
+            float z2 = XHFPModelVertexType.decodePosition(MemoryUtil.memGetShort(i + 4 - STRIDE));
 
             float edge1x = x1 - x0;
             float edge1y = y1 - y0;
@@ -139,14 +135,14 @@ public class XHFPModelVertexBufferWriterNio extends VertexBufferWriterNio implem
             float edge2y = y2 - y0;
             float edge2z = z2 - z0;
 
-            float u0 = XHFPModelVertexType.decodeBlockTexture(buffer.getShort(i + 12 - STRIDE * 3));
-            float v0 = XHFPModelVertexType.decodeBlockTexture(buffer.getShort(i + 14 - STRIDE * 3));
+            float u0 = XHFPModelVertexType.decodeBlockTexture(MemoryUtil.memGetShort(i + 12 - STRIDE * 3));
+            float v0 = XHFPModelVertexType.decodeBlockTexture(MemoryUtil.memGetShort(i + 14 - STRIDE * 3));
 
-            float u1 = XHFPModelVertexType.decodeBlockTexture(buffer.getShort(i + 12 - STRIDE * 2));
-            float v1 = XHFPModelVertexType.decodeBlockTexture(buffer.getShort(i + 14 - STRIDE * 2));
+            float u1 = XHFPModelVertexType.decodeBlockTexture(MemoryUtil.memGetShort(i + 12 - STRIDE * 2));
+            float v1 = XHFPModelVertexType.decodeBlockTexture(MemoryUtil.memGetShort(i + 14 - STRIDE * 2));
 
-            float u2 = XHFPModelVertexType.decodeBlockTexture(buffer.getShort(i + 12 - STRIDE));
-            float v2 = XHFPModelVertexType.decodeBlockTexture(buffer.getShort(i + 14 - STRIDE));
+            float u2 = XHFPModelVertexType.decodeBlockTexture(MemoryUtil.memGetShort(i + 12 - STRIDE));
+            float v2 = XHFPModelVertexType.decodeBlockTexture(MemoryUtil.memGetShort(i + 14 - STRIDE));
 
             float deltaU1 = u1 - u0;
             float deltaV1 = v1 - v0;
@@ -200,10 +196,10 @@ public class XHFPModelVertexBufferWriterNio extends VertexBufferWriterNio implem
             int tangent = Norm3b.pack(tangentx, tangenty, tangentz);
             tangent |= (tangentW << 24);
 
-            buffer.putInt(i + 24, tangent);
-            buffer.putInt(i + 24 - STRIDE, tangent);
-            buffer.putInt(i + 24 - STRIDE * 2, tangent);
-            buffer.putInt(i + 24 - STRIDE * 3, tangent);
+            MemoryUtil.memPutInt(i + 24, tangent);
+            MemoryUtil.memPutInt(i + 24 - STRIDE, tangent);
+            MemoryUtil.memPutInt(i + 24 - STRIDE * 2, tangent);
+            MemoryUtil.memPutInt(i + 24 - STRIDE * 3, tangent);
         }
 
         this.advance();
