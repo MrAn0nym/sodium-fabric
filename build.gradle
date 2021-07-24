@@ -44,7 +44,7 @@ dependencies {
     modIncludeImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
 
     // Iris
-    modImplementation "net.coderbot.iris_mc1_17:iris:1.1.0-starline+"
+    modImplementation "net.coderbot.iris_mc1_17:iris:1.1.1-starline+"
 }
 
 if (project.use_third_party_mods) {
