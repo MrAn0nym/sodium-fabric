@@ -100,6 +100,34 @@ public abstract class ShaderChunkRenderer implements ChunkRenderer {
                 new Identifier("sodium", getShaderName(pass) + ".vsh"), constants);
     }
 
+    private GlShader createGeometryShader(RenderDevice device, boolean isShadowPass, BlockRenderPass pass,
+                                          SodiumTerrainPipeline pipeline, ShaderConstants constants) {
+        if (pipeline != null) {
+            Optional<String> irisGeometryShader;
+            String name;
+
+            if (isShadowPass) {
+                irisGeometryShader = pipeline.getShadowGeometryShaderSource();
+                name = "shadow_terrain";
+            } else if (pass.isTranslucent()) {
+                irisGeometryShader = pipeline.getTranslucentGeometryShaderSource();
+                name = "terrain_translucent";
+            } else {
+                irisGeometryShader = pipeline.getTerrainGeometryShaderSource();
+                name = "terrain";
+            }
+
+            String fullName = "patched_" + name + "_for_sodium.fsh";
+
+            if (irisGeometryShader.isPresent()) {
+                return new GlShader(ShaderType.GEOMETRY, new Identifier("iris", fullName),
+                        irisGeometryShader.get());
+            }
+        }
+
+        return null;
+    }
+
     private GlShader createFragmentShader(RenderDevice device, boolean isShadowPass, BlockRenderPass pass,
                                           SodiumTerrainPipeline pipeline, ShaderConstants constants) {
         if (pipeline != null) {
@@ -142,22 +170,27 @@ public abstract class ShaderChunkRenderer implements ChunkRenderer {
         ShaderConstants constants = options.constants();
 
         GlShader vertShader = createVertexShader(device, isShadowPass, pass, pipeline, constants);
+        GlShader geomShader = createGeometryShader(device, isShadowPass, pass, pipeline, constants);
         GlShader fragShader = createFragmentShader(device, isShadowPass, pass, pipeline, constants);
 
         try {
-            return GlProgram.builder(new Identifier("sodium", "chunk_shader"))
-                    .attachShader(vertShader)
-                    .attachShader(fragShader)
-                    .bindAttribute("a_Pos", ChunkShaderBindingPoints.ATTRIBUTE_POSITION_ID)
-                    .bindAttribute("a_Color", ChunkShaderBindingPoints.ATTRIBUTE_COLOR)
-                    .bindAttribute("a_TexCoord", ChunkShaderBindingPoints.ATTRIBUTE_BLOCK_TEXTURE)
-                    .bindAttribute("a_LightCoord", ChunkShaderBindingPoints.ATTRIBUTE_LIGHT_TEXTURE)
-                    .bindAttribute("mc_Entity", ChunkShaderBindingPoints.BLOCK_ID)
-                    .bindAttribute("mc_midTexCoord", ChunkShaderBindingPoints.MID_TEX_COORD)
-                    .bindAttribute("at_tangent", ChunkShaderBindingPoints.TANGENT)
-                    .bindAttribute("a_Normal", ChunkShaderBindingPoints.NORMAL)
-                    .bindFragmentData("fragColor", ChunkShaderBindingPoints.FRAG_COLOR)
-                    .bindFragmentData("iris_FragData", ChunkShaderBindingPoints.FRAG_COLOR)
+            GlProgram.Builder builder = GlProgram.builder(new Identifier("sodium", "chunk_shader"));
+            builder.attachShader(vertShader);
+            if (geomShader != null) {
+                builder.attachShader(geomShader);
+            }
+            builder.attachShader(fragShader);
+            builder.bindAttribute("a_Pos", ChunkShaderBindingPoints.ATTRIBUTE_POSITION_ID);
+            builder.bindAttribute("a_Color", ChunkShaderBindingPoints.ATTRIBUTE_COLOR);
+            builder.bindAttribute("a_TexCoord", ChunkShaderBindingPoints.ATTRIBUTE_BLOCK_TEXTURE);
+            builder.bindAttribute("a_LightCoord", ChunkShaderBindingPoints.ATTRIBUTE_LIGHT_TEXTURE);
+            builder.bindAttribute("mc_Entity", ChunkShaderBindingPoints.BLOCK_ID);
+            builder.bindAttribute("mc_midTexCoord", ChunkShaderBindingPoints.MID_TEX_COORD);
+            builder.bindAttribute("at_tangent", ChunkShaderBindingPoints.TANGENT);
+            builder.bindAttribute("a_Normal", ChunkShaderBindingPoints.NORMAL);
+            builder.bindFragmentData("fragColor", ChunkShaderBindingPoints.FRAG_COLOR);
+            builder.bindFragmentData("iris_FragData", ChunkShaderBindingPoints.FRAG_COLOR);
+            return builder
                     .build((handle) -> {
                         ProgramUniforms uniforms = null;
                         ProgramSamplers samplers = null;
@@ -176,6 +209,9 @@ public abstract class ShaderChunkRenderer implements ChunkRenderer {
                     });
         } finally {
             vertShader.delete();
+            if (geomShader != null) {
+                geomShader.delete();
+            }
             fragShader.delete();
         }
     }
