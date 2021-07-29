@@ -34,6 +34,7 @@ import me.jellysquid.mods.sodium.client.world.cloned.ClonedChunkSectionCache;
 import me.jellysquid.mods.sodium.common.util.DirectionUtil;
 import me.jellysquid.mods.sodium.common.util.collections.FutureQueueDrainingIterator;
 import net.coderbot.iris.Iris;
+import net.coderbot.iris.pipeline.ShadowRenderer;
 import net.coderbot.iris.shadows.ShadowRenderingState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -168,6 +169,10 @@ public class RenderSectionManager implements ChunkStatusListener {
         this.iterateChunks(camera, frustum, frame, spectator);
 
         this.needsUpdate = false;
+
+        if(ShadowRenderingState.areShadowsCurrentlyBeingRendered()) {
+            ShadowRenderer.visibleBlockEntities = visibleBlockEntities;
+        }
     }
 
     private void setup(Camera camera) {
