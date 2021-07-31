@@ -25,5 +25,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: sodium-jars
+        name: build-artifacts
         path: build/libs
