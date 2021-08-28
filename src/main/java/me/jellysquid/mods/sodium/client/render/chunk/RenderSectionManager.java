@@ -81,7 +81,7 @@ public class RenderSectionManager implements ChunkStatusListener {
     private final ChunkAdjacencyMap adjacencyMap = new ChunkAdjacencyMap();
 
     private ChunkRenderList chunkRenderList = new ChunkRenderList();
-    private ChunkGraphIterationQueue iterationQueue = new ChunkGraphIterationQueue();
+    private final ChunkGraphIterationQueue iterationQueue = new ChunkGraphIterationQueue();
 
     private ObjectList<RenderSection> tickableChunks = new ObjectArrayList<>();
     private ObjectList<BlockEntity> visibleBlockEntities = new ObjectArrayList<>();
