@@ -418,6 +418,14 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
         return this.chunkRenderer;
     }
 
+    public RenderSectionManager getRenderSectionManager() {
+        return this.renderSectionManager;
+    }
+
+    public void swapRenderingContext(RenderSectionManager.RenderingContext context) {
+        this.renderSectionManager.swapContextWith(context);
+    }
+
     public Collection<String> getMemoryDebugStrings() {
         List<String> list = new ArrayList<>();
 
@@ -448,9 +456,5 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
 
     private static long toMib(long x) {
         return x / 1024L / 1024L;
-    }
-
-    public RenderSectionManager getRenderSectionManager() {
-        return this.renderSectionManager;
     }
 }

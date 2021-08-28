@@ -81,7 +81,7 @@ public class RenderSectionManager implements ChunkStatusListener {
     private final ChunkAdjacencyMap adjacencyMap = new ChunkAdjacencyMap();
 
     private ChunkRenderList chunkRenderList = new ChunkRenderList();
-    private final ChunkGraphIterationQueue iterationQueue = new ChunkGraphIterationQueue();
+    private ChunkGraphIterationQueue iterationQueue = new ChunkGraphIterationQueue();
 
     private ObjectList<RenderSection> tickableChunks = new ObjectArrayList<>();
     private ObjectList<BlockEntity> visibleBlockEntities = new ObjectArrayList<>();
@@ -105,10 +105,7 @@ public class RenderSectionManager implements ChunkStatusListener {
 
     private int currentFrame = 0;
 
-    private ChunkRenderList chunkRenderListSwap = new ChunkRenderList();
-    private ObjectList<RenderSection> tickableChunksSwap = new ObjectArrayList<>();
-    private ObjectList<BlockEntity> visibleBlockEntitiesSwap = new ObjectArrayList<>();
-    private boolean needsUpdateSwap;
+    private final RenderingContext shadowMapContext = new RenderingContext();
 
     public RenderSectionManager(SodiumWorldRenderer worldRenderer, ChunkRenderer chunkRenderer, BlockRenderPassManager renderPassManager, ClientWorld world, int renderDistance) {
         this.chunkRenderer = chunkRenderer;
@@ -119,7 +116,7 @@ public class RenderSectionManager implements ChunkStatusListener {
         this.builder.init(world, renderPassManager);
 
         this.needsUpdate = true;
-        this.needsUpdateSwap = true;
+        this.shadowMapContext.needsUpdate = true;
         this.renderDistance = renderDistance;
 
         this.regions = new RenderRegionManager(this.chunkRenderer);
@@ -142,22 +139,37 @@ public class RenderSectionManager implements ChunkStatusListener {
         }
     }
 
-    public void swapState() {
+    public static class RenderingContext {
+        public ChunkRenderList chunkRenderList = new ChunkRenderList();
+        public ObjectList<RenderSection> tickableChunks = new ObjectArrayList<>();
+        public ObjectList<BlockEntity> visibleBlockEntities = new ObjectArrayList<>();
+        public boolean needsUpdate = true;
+
+        public RenderingContext() {
+
+        }
+    }
+
+    public void swapContextWith(RenderingContext context) {
         ChunkRenderList chunkRenderListTmp = chunkRenderList;
-        chunkRenderList = chunkRenderListSwap;
-        chunkRenderListSwap = chunkRenderListTmp;
+        chunkRenderList = context.chunkRenderList;
+        context.chunkRenderList = chunkRenderListTmp;
 
         ObjectList<RenderSection> tickableChunksTmp = tickableChunks;
-        tickableChunks = tickableChunksSwap;
-        tickableChunksSwap = tickableChunksTmp;
+        tickableChunks = context.tickableChunks;
+        context.tickableChunks = tickableChunksTmp;
 
         ObjectList<BlockEntity> visibleBlockEntitiesTmp = visibleBlockEntities;
-        visibleBlockEntities = visibleBlockEntitiesSwap;
-        visibleBlockEntitiesSwap = visibleBlockEntitiesTmp;
+        visibleBlockEntities = context.visibleBlockEntities;
+        context.visibleBlockEntities = visibleBlockEntitiesTmp;
 
         boolean needsUpdateTmp = needsUpdate;
-        needsUpdate = needsUpdateSwap;
-        needsUpdateSwap = needsUpdateTmp;
+        needsUpdate = context.needsUpdate;
+        context.needsUpdate = needsUpdateTmp;
+    }
+
+    public void swapState() {
+        swapContextWith(shadowMapContext);
     }
 
     public void update(Camera camera, FrustumExtended frustum, int frame, boolean spectator) {
@@ -273,7 +285,7 @@ public class RenderSectionManager implements ChunkStatusListener {
         for (int y = this.world.getBottomSectionCoord(); y < this.world.getTopSectionCoord(); y++) {
             boolean dirty = this.loadSection(x, y, z);
             this.needsUpdate |= dirty;
-            this.needsUpdateSwap |= dirty;
+            this.shadowMapContext.needsUpdate |= dirty;
         }
     }
 
@@ -284,7 +296,7 @@ public class RenderSectionManager implements ChunkStatusListener {
         for (int y = this.world.getBottomSectionCoord(); y < this.world.getTopSectionCoord(); y++) {
             boolean dirty = this.unloadSection(x, y, z);
             this.needsUpdate |= dirty;
-            this.needsUpdateSwap |= dirty;
+            this.shadowMapContext.needsUpdate |= dirty;
         }
     }
 
