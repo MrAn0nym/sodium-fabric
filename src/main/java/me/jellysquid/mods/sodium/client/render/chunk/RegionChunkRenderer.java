@@ -2,7 +2,6 @@ package me.jellysquid.mods.sodium.client.render.chunk;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import me.jellysquid.mods.sodium.client.gl.attribute.GlVertexAttributeBinding;
 import me.jellysquid.mods.sodium.client.gl.buffer.GlBufferUsage;
 import me.jellysquid.mods.sodium.client.gl.buffer.GlMutableBuffer;
@@ -36,7 +35,6 @@ import java.util.Map;
 public class RegionChunkRenderer extends ShaderChunkRenderer {
     private final MultiDrawBatch[] batches;
     private final GlVertexAttributeBinding[] vertexAttributeBindings;
-    private final boolean enableBlockFaceCulling = SodiumClientMod.options().advanced.useBlockFaceCulling;
 
     private final GlMutableBuffer chunkInfoBuffer;
 
@@ -136,21 +134,19 @@ public class RegionChunkRenderer extends ShaderChunkRenderer {
                 continue;
             }
 
+            ChunkRenderBounds bounds = render.getBounds();
+
             long indexOffset = state.getIndexSegment()
                     .getOffset();
 
             int baseVertex = state.getVertexSegment()
                     .getOffset() / this.vertexFormat.getStride();
 
-            if (this.enableBlockFaceCulling) {
-
-                ChunkRenderBounds bounds = render.getBounds();
+            this.addDrawCall(state.getModelPart(ModelQuadFacing.UNASSIGNED), indexOffset, baseVertex);
 
                 // Iris: No block face culling during the shadow pass
 
                 boolean dontCullFaces = ShadowRenderingState.areShadowsCurrentlyBeingRendered();
-
-                this.addDrawCall(state.getModelPart(ModelQuadFacing.UNASSIGNED), indexOffset, baseVertex);
 
                 if (camera.posY > bounds.y1 || dontCullFaces) {
                     this.addDrawCall(state.getModelPart(ModelQuadFacing.UP), indexOffset, baseVertex);
@@ -175,12 +171,7 @@ public class RegionChunkRenderer extends ShaderChunkRenderer {
                 if (camera.posZ < bounds.z2 || dontCullFaces) {
                     this.addDrawCall(state.getModelPart(ModelQuadFacing.NORTH), indexOffset, baseVertex);
                 }
-            } else {
-                for (ModelQuadFacing modelFace : ModelQuadFacing.values()) {
-                    this.addDrawCall(state.getModelPart(modelFace), indexOffset, baseVertex);
-                }
             }
-        }
 
         boolean nonEmpty = false;
 
