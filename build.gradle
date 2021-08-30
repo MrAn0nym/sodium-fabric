@@ -16,11 +16,6 @@ minecraft {
 }
 
 repositories {
-    // Fixes dependency resolution error for the modmenu dependency from the new maven in starline iris
-    maven {
-      url "https://maven.quiltmc.org/repository/release/"
-    }
-
     mavenLocal()
 }
 
