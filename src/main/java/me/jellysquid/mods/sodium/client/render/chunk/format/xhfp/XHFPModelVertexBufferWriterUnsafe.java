@@ -184,7 +184,7 @@ public class XHFPModelVertexBufferWriterUnsafe extends VertexBufferWriterUnsafe 
             float pbitangenty = -(tangentx * normal.getZ() - tangentz * normal.getX());
             float pbitangentz =   tangentx * normal.getX() - tangenty * normal.getY();
 
-            float dot = bitangentx * pbitangentx + bitangenty + pbitangenty + bitangentz * pbitangentz;
+            float dot = (bitangentx * pbitangentx) + (bitangenty * pbitangenty) + (bitangentz * pbitangentz);
             byte tangentW;
 
             if (dot < 0) {
