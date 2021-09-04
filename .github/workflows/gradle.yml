@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'HyperCubeMC/Iris'
-        ref: '1.17-starline'
+        ref: '1.18-starline'
         path: 'iris'
     - name: Iris publishToMavenLocal
       run: cd ./iris && ./gradlew publishToMavenLocal && cd ..
