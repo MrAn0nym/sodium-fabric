@@ -425,15 +425,11 @@ public class SodiumWorldRenderer implements ChunkStatusListener {
         this.renderSectionManager.scheduleRebuild(x, y, z, important);
     }
 
-    public RenderSectionManager getRenderSectionManager() {
-        return this.renderSectionManager;
-    }
-
-    public void swapRenderingContext(RenderSectionManager.RenderingContext context) {
-        this.renderSectionManager.swapContextWith(context);
-    }
-
     public Collection<String> getMemoryDebugStrings() {
         return this.renderSectionManager.getDebugStrings();
+    }
+
+    public RenderSectionManager getRenderSectionManager() {
+        return this.renderSectionManager;
     }
 }

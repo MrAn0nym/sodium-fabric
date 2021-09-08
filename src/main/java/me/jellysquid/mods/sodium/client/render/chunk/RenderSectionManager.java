@@ -108,7 +108,10 @@ public class RenderSectionManager implements ChunkStatusListener {
 
     private int currentFrame = 0;
 
-    private final RenderingContext shadowMapContext = new RenderingContext();
+    private ChunkRenderList chunkRenderListSwap = new ChunkRenderList();
+    private ObjectList<RenderSection> tickableChunksSwap = new ObjectArrayList<>();
+    private ObjectList<BlockEntity> visibleBlockEntitiesSwap = new ObjectArrayList<>();
+    private boolean needsUpdateSwap;
 
     public RenderSectionManager(SodiumWorldRenderer worldRenderer, BlockRenderPassManager renderPassManager, ClientWorld world, int renderDistance) {
         this.chunkRenderer = new RegionChunkRenderer(RenderDevice.INSTANCE, ChunkModelVertexFormats.EXTENDED);
@@ -119,7 +122,7 @@ public class RenderSectionManager implements ChunkStatusListener {
         this.builder.init(world, renderPassManager);
 
         this.needsUpdate = true;
-        this.shadowMapContext.needsUpdate = true;
+        this.needsUpdateSwap = true;
         this.renderDistance = renderDistance;
 
         this.regions = new RenderRegionManager();
@@ -142,37 +145,22 @@ public class RenderSectionManager implements ChunkStatusListener {
         }
     }
 
-    public static class RenderingContext {
-        public ChunkRenderList chunkRenderList = new ChunkRenderList();
-        public ObjectList<RenderSection> tickableChunks = new ObjectArrayList<>();
-        public ObjectList<BlockEntity> visibleBlockEntities = new ObjectArrayList<>();
-        public boolean needsUpdate = true;
-
-        public RenderingContext() {
-
-        }
-    }
-
-    public void swapContextWith(RenderingContext context) {
+    public void swapState() {
         ChunkRenderList chunkRenderListTmp = chunkRenderList;
-        chunkRenderList = context.chunkRenderList;
-        context.chunkRenderList = chunkRenderListTmp;
+        chunkRenderList = chunkRenderListSwap;
+        chunkRenderListSwap = chunkRenderListTmp;
 
         ObjectList<RenderSection> tickableChunksTmp = tickableChunks;
-        tickableChunks = context.tickableChunks;
-        context.tickableChunks = tickableChunksTmp;
+        tickableChunks = tickableChunksSwap;
+        tickableChunksSwap = tickableChunksTmp;
 
         ObjectList<BlockEntity> visibleBlockEntitiesTmp = visibleBlockEntities;
-        visibleBlockEntities = context.visibleBlockEntities;
-        context.visibleBlockEntities = visibleBlockEntitiesTmp;
+        visibleBlockEntities = visibleBlockEntitiesSwap;
+        visibleBlockEntitiesSwap = visibleBlockEntitiesTmp;
 
         boolean needsUpdateTmp = needsUpdate;
-        needsUpdate = context.needsUpdate;
-        context.needsUpdate = needsUpdateTmp;
-    }
-
-    public void swapState() {
-        swapContextWith(shadowMapContext);
+        needsUpdate = needsUpdateSwap;
+        needsUpdateSwap = needsUpdateTmp;
     }
 
     public void update(Camera camera, FrustumExtended frustum, int frame, boolean spectator) {
@@ -288,7 +276,7 @@ public class RenderSectionManager implements ChunkStatusListener {
         for (int y = this.world.getBottomSectionCoord(); y < this.world.getTopSectionCoord(); y++) {
             boolean dirty = this.loadSection(x, y, z);
             this.needsUpdate |= dirty;
-            this.shadowMapContext.needsUpdate |= dirty;
+            this.needsUpdateSwap |= dirty;
         }
     }
 
@@ -299,7 +287,7 @@ public class RenderSectionManager implements ChunkStatusListener {
         for (int y = this.world.getBottomSectionCoord(); y < this.world.getTopSectionCoord(); y++) {
             boolean dirty = this.unloadSection(x, y, z);
             this.needsUpdate |= dirty;
-            this.shadowMapContext.needsUpdate |= dirty;
+            this.needsUpdateSwap |= dirty;
         }
     }
 
