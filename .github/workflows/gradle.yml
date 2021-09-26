@@ -22,22 +22,25 @@ jobs:
       run: cd ./Iris && ./gradlew publishToMavenLocal && cd ..
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Save jars to repo
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "github-actions"
-        cd build/libs
-        rm ../*.jar
-        mv *sources-dev.jar ../sodium-fabric-latest-sources-dev.jar
-        mv *sources.jar ../sodium-fabric-latest-sources.jar
-        mv *dev.jar ../sodium-fabric-latest-dev.jar
-        mv *.jar ../sodium-fabric-latest.jar
-        rm -r ../libs
-        git add * -f || true
-        git commit -m "Update .jar"
-        git push 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
         name: sodium-jars
         path: build/libs
+    - name: Clean remove old jars
+      run: rm ./build/*.jar
+    - name: Rename files
+      run: |
+        mv *sources-dev.jar ../sodium-fabric-latest-sources-dev.jar
+        mv *sources.jar ../sodium-fabric-latest-sources.jar
+        mv *dev.jar ../sodium-fabric-latest-dev.jar
+        mv *.jar ../sodium-fabric-latest.jar
+        rm -r ../libs
+    - name: Save jars to repo
+      run: |
+        cd build
+        git config --local user.email "action@github.com"
+        git config --local user.name "github-actions"
+        git add * -f || true
+        git commit -m "Update jars"
+        git push 
