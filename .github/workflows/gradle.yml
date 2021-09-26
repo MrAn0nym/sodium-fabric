@@ -28,14 +28,14 @@ jobs:
         name: sodium-jars
         path: build/libs
     - name: Clean remove old jars
-      run: rm ./build/*.jar
+      run: rm ./build/*.jar || true
     - name: Rename files
       run: |
         mv *sources-dev.jar ../sodium-fabric-latest-sources-dev.jar
         mv *sources.jar ../sodium-fabric-latest-sources.jar
         mv *dev.jar ../sodium-fabric-latest-dev.jar
         mv *.jar ../sodium-fabric-latest.jar
-        rm -r ../libs
+        rm -r ../libs || true
     - name: Save jars to repo
       run: |
         cd build
