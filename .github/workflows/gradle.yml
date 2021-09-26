@@ -27,7 +27,9 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
         ls
-        cd ./build/libs
+        cd build
+        ls
+        cd libs
         ls
         git add * || true
         git commit -m "Update .jar"
