@@ -1,0 +1,168 @@
+{
+  "mappings": {
+    "me/jellysquid/mods/sodium/mixin/core/model/MixinBlockColors": {
+      "registerColorProvider": "Lnet/minecraft/class_324;method_1690(Lnet/minecraft/class_322;[Lnet/minecraft/class_2248;)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/core/model/MixinItemColors": {
+      "register": "Lnet/minecraft/class_325;method_1708(Lnet/minecraft/class_326;[Lnet/minecraft/class_1935;)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/options/MixinInGameHud": {
+      "Lnet/minecraft/client/MinecraftClient;isFancyGraphicsOrBetter()Z": "Lnet/minecraft/class_310;method_1517()Z",
+      "render": "Lnet/minecraft/class_329;method_1753(Lnet/minecraft/class_4587;F)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/render_layer/MixinTexturedRenderLayers": {
+      "getSignTextureId": "Lnet/minecraft/class_4722;method_24064(Lnet/minecraft/class_4719;)Lnet/minecraft/class_4730;"
+    },
+    "me/jellysquid/mods/sodium/mixin/core/matrix/MixinGameRenderer": {
+      "loadProjectionMatrix": "Lnet/minecraft/class_757;method_22709(Lnet/minecraft/class_1159;)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/options/MixinOptionsScreen": {
+      "method_19828(Lnet/minecraft/client/gui/widget/ButtonWidget;)V": "Lnet/minecraft/class_429;method_19828(Lnet/minecraft/class_4185;)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/texture_tracking/MixinSpriteAtlasTexture": {
+      "getSprite": "Lnet/minecraft/class_1059;method_4608(Lnet/minecraft/class_2960;)Lnet/minecraft/class_1058;"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/world_ticking/MixinClientWorld": {
+      "doRandomBlockDisplayTicks": "Lnet/minecraft/class_638;method_2941(III)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/block/MixinWorldRenderer": {
+      "render": "Lnet/minecraft/class_761;method_22710(Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;Lnet/minecraft/class_1159;)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/particle/cull/MixinParticleManager": {
+      "renderParticles": "Lnet/minecraft/class_702;method_3049(Lnet/minecraft/class_4587;Lnet/minecraft/class_4597$class_4598;Lnet/minecraft/class_765;Lnet/minecraft/class_4184;F)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/entity/smooth_lighting/MixinEntityRenderer": {
+      "getLight": "Lnet/minecraft/class_897;method_24088(Lnet/minecraft/class_1297;F)I",
+      "shouldRender": "Lnet/minecraft/class_897;method_3933(Lnet/minecraft/class_1297;Lnet/minecraft/class_4604;DDD)Z",
+      "Lnet/minecraft/client/render/Frustum;isVisible(Lnet/minecraft/util/math/Box;)Z": "Lnet/minecraft/class_4604;method_23093(Lnet/minecraft/class_238;)Z"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/debug/MixinDebugHud": {
+      "getRightText": "Lnet/minecraft/class_340;method_1839()Ljava/util/List;"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/chunk_rendering/MixinClientChunkManager$MixinClientChunkMap": {
+      "net/minecraft/client/world/ClientChunkManager$ClientChunkMap": "net/minecraft/class_631$class_3681"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/block/MixinBlockModelRenderer": {
+      "render(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z": "Lnet/minecraft/class_778;method_3374(Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/entity/smooth_lighting/MixinPaintingEntityRenderer": {
+      "method_4074": "Lnet/minecraft/class_928;method_4074(Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1534;IILnet/minecraft/class_1058;Lnet/minecraft/class_1058;)V",
+      "Lnet/minecraft/client/render/WorldRenderer;getLightmapCoordinates(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/util/math/BlockPos;)I": "Lnet/minecraft/class_761;method_23794(Lnet/minecraft/class_1920;Lnet/minecraft/class_2338;)I",
+      "render": "Lnet/minecraft/class_928;method_4075(Lnet/minecraft/class_1534;FFLnet/minecraft/class_4587;Lnet/minecraft/class_4597;I)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/options/MixinWorldRenderer": {
+      "renderWeather": "Lnet/minecraft/class_761;method_22714(Lnet/minecraft/class_765;FDDD)V",
+      "Lnet/minecraft/client/MinecraftClient;isFancyGraphicsOrBetter()Z": "Lnet/minecraft/class_310;method_1517()Z"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/gui/MixinDebugHud": {
+      "renderLeftText": "Lnet/minecraft/class_340;method_1847(Lnet/minecraft/class_4587;)V",
+      "renderRightText": "Lnet/minecraft/class_340;method_1848(Lnet/minecraft/class_4587;)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/core/frustum/MixinFrustum": {
+      "transform": "Lnet/minecraft/class_4604;method_23091(Lnet/minecraft/class_1159;IIII)V",
+      "setPosition": "Lnet/minecraft/class_4604;method_23088(DDD)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/chunk_rendering/MixinClientChunkManager": {
+      "Lnet/minecraft/client/world/ClientChunkManager$ClientChunkMap;compareAndSet(ILnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/chunk/WorldChunk;)Lnet/minecraft/world/chunk/WorldChunk;": "Lnet/minecraft/class_631$class_3681;method_20183(ILnet/minecraft/class_2818;Lnet/minecraft/class_2818;)Lnet/minecraft/class_2818;",
+      "Lnet/minecraft/client/world/ClientChunkManager$ClientChunkMap;set(ILnet/minecraft/world/chunk/WorldChunk;)V": "Lnet/minecraft/class_631$class_3681;method_16031(ILnet/minecraft/class_2818;)V",
+      "Lnet/minecraft/client/world/ClientWorld;resetChunkColor(II)V": "Lnet/minecraft/class_638;method_23782(II)V",
+      "setChunkMapCenter(II)V": "Lnet/minecraft/class_631;method_20317(II)V",
+      "loadChunkFromPacket": "Lnet/minecraft/class_631;method_16020(IILnet/minecraft/class_4548;Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;IZ)Lnet/minecraft/class_2818;",
+      "unload": "Lnet/minecraft/class_631;method_2859(II)V",
+      "updateLoadDistance": "Lnet/minecraft/class_631;method_20180(I)V",
+      "tick": "Lnet/minecraft/class_631;method_28102(Ljava/util/function/BooleanSupplier;)V"
+    },
+    "me/jellysquid/mods/sodium/mixin/features/chunk_rendering/MixinWorldRenderer": {
+      "scheduleTerrainUpdate": "Lnet/minecraft/class_761;method_3292()V",
+      "reload": "Lnet/minecraft/class_761;method_3279()V",
+      "Lnet/minecraft/client/render/WorldRenderer;noCullingBlockEntities:Ljava/util/Set;": "Lnet/minecraft/class_761;field_4055:Ljava/util/Set;",
+      "Lnet/minecraft/client/options/GameOptions;viewDistance:I": "Lnet/minecraft/class_315;field_1870:I",
+      "setWorld": "Lnet/minecraft/class_761;method_3244(Lnet/minecraft/class_638;)V",
+      "render": "Lnet/minecraft/class_761;method_22710(Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;Lnet/minecraft/class_1159;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "me/jellysquid/mods/sodium/mixin/core/model/MixinBlockColors": {
+        "registerColorProvider": "Lnet/minecraft/class_324;method_1690(Lnet/minecraft/class_322;[Lnet/minecraft/class_2248;)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/core/model/MixinItemColors": {
+        "register": "Lnet/minecraft/class_325;method_1708(Lnet/minecraft/class_326;[Lnet/minecraft/class_1935;)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/options/MixinInGameHud": {
+        "Lnet/minecraft/client/MinecraftClient;isFancyGraphicsOrBetter()Z": "Lnet/minecraft/class_310;method_1517()Z",
+        "render": "Lnet/minecraft/class_329;method_1753(Lnet/minecraft/class_4587;F)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/render_layer/MixinTexturedRenderLayers": {
+        "getSignTextureId": "Lnet/minecraft/class_4722;method_24064(Lnet/minecraft/class_4719;)Lnet/minecraft/class_4730;"
+      },
+      "me/jellysquid/mods/sodium/mixin/core/matrix/MixinGameRenderer": {
+        "loadProjectionMatrix": "Lnet/minecraft/class_757;method_22709(Lnet/minecraft/class_1159;)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/options/MixinOptionsScreen": {
+        "method_19828(Lnet/minecraft/client/gui/widget/ButtonWidget;)V": "Lnet/minecraft/class_429;method_19828(Lnet/minecraft/class_4185;)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/texture_tracking/MixinSpriteAtlasTexture": {
+        "getSprite": "Lnet/minecraft/class_1059;method_4608(Lnet/minecraft/class_2960;)Lnet/minecraft/class_1058;"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/world_ticking/MixinClientWorld": {
+        "doRandomBlockDisplayTicks": "Lnet/minecraft/class_638;method_2941(III)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/block/MixinWorldRenderer": {
+        "render": "Lnet/minecraft/class_761;method_22710(Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;Lnet/minecraft/class_1159;)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/particle/cull/MixinParticleManager": {
+        "renderParticles": "Lnet/minecraft/class_702;method_3049(Lnet/minecraft/class_4587;Lnet/minecraft/class_4597$class_4598;Lnet/minecraft/class_765;Lnet/minecraft/class_4184;F)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/entity/smooth_lighting/MixinEntityRenderer": {
+        "getLight": "Lnet/minecraft/class_897;method_24088(Lnet/minecraft/class_1297;F)I",
+        "shouldRender": "Lnet/minecraft/class_897;method_3933(Lnet/minecraft/class_1297;Lnet/minecraft/class_4604;DDD)Z",
+        "Lnet/minecraft/client/render/Frustum;isVisible(Lnet/minecraft/util/math/Box;)Z": "Lnet/minecraft/class_4604;method_23093(Lnet/minecraft/class_238;)Z"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/debug/MixinDebugHud": {
+        "getRightText": "Lnet/minecraft/class_340;method_1839()Ljava/util/List;"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/chunk_rendering/MixinClientChunkManager$MixinClientChunkMap": {
+        "net/minecraft/client/world/ClientChunkManager$ClientChunkMap": "net/minecraft/class_631$class_3681"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/block/MixinBlockModelRenderer": {
+        "render(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z": "Lnet/minecraft/class_778;method_3374(Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/entity/smooth_lighting/MixinPaintingEntityRenderer": {
+        "method_4074": "Lnet/minecraft/class_928;method_4074(Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1534;IILnet/minecraft/class_1058;Lnet/minecraft/class_1058;)V",
+        "Lnet/minecraft/client/render/WorldRenderer;getLightmapCoordinates(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/util/math/BlockPos;)I": "Lnet/minecraft/class_761;method_23794(Lnet/minecraft/class_1920;Lnet/minecraft/class_2338;)I",
+        "render": "Lnet/minecraft/class_928;method_4075(Lnet/minecraft/class_1534;FFLnet/minecraft/class_4587;Lnet/minecraft/class_4597;I)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/options/MixinWorldRenderer": {
+        "renderWeather": "Lnet/minecraft/class_761;method_22714(Lnet/minecraft/class_765;FDDD)V",
+        "Lnet/minecraft/client/MinecraftClient;isFancyGraphicsOrBetter()Z": "Lnet/minecraft/class_310;method_1517()Z"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/gui/MixinDebugHud": {
+        "renderLeftText": "Lnet/minecraft/class_340;method_1847(Lnet/minecraft/class_4587;)V",
+        "renderRightText": "Lnet/minecraft/class_340;method_1848(Lnet/minecraft/class_4587;)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/core/frustum/MixinFrustum": {
+        "transform": "Lnet/minecraft/class_4604;method_23091(Lnet/minecraft/class_1159;IIII)V",
+        "setPosition": "Lnet/minecraft/class_4604;method_23088(DDD)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/chunk_rendering/MixinClientChunkManager": {
+        "Lnet/minecraft/client/world/ClientChunkManager$ClientChunkMap;compareAndSet(ILnet/minecraft/world/chunk/WorldChunk;Lnet/minecraft/world/chunk/WorldChunk;)Lnet/minecraft/world/chunk/WorldChunk;": "Lnet/minecraft/class_631$class_3681;method_20183(ILnet/minecraft/class_2818;Lnet/minecraft/class_2818;)Lnet/minecraft/class_2818;",
+        "Lnet/minecraft/client/world/ClientChunkManager$ClientChunkMap;set(ILnet/minecraft/world/chunk/WorldChunk;)V": "Lnet/minecraft/class_631$class_3681;method_16031(ILnet/minecraft/class_2818;)V",
+        "Lnet/minecraft/client/world/ClientWorld;resetChunkColor(II)V": "Lnet/minecraft/class_638;method_23782(II)V",
+        "setChunkMapCenter(II)V": "Lnet/minecraft/class_631;method_20317(II)V",
+        "loadChunkFromPacket": "Lnet/minecraft/class_631;method_16020(IILnet/minecraft/class_4548;Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;IZ)Lnet/minecraft/class_2818;",
+        "unload": "Lnet/minecraft/class_631;method_2859(II)V",
+        "updateLoadDistance": "Lnet/minecraft/class_631;method_20180(I)V",
+        "tick": "Lnet/minecraft/class_631;method_28102(Ljava/util/function/BooleanSupplier;)V"
+      },
+      "me/jellysquid/mods/sodium/mixin/features/chunk_rendering/MixinWorldRenderer": {
+        "scheduleTerrainUpdate": "Lnet/minecraft/class_761;method_3292()V",
+        "reload": "Lnet/minecraft/class_761;method_3279()V",
+        "Lnet/minecraft/client/render/WorldRenderer;noCullingBlockEntities:Ljava/util/Set;": "Lnet/minecraft/class_761;field_4055:Ljava/util/Set;",
+        "Lnet/minecraft/client/options/GameOptions;viewDistance:I": "Lnet/minecraft/class_315;field_1870:I",
+        "setWorld": "Lnet/minecraft/class_761;method_3244(Lnet/minecraft/class_638;)V",
+        "render": "Lnet/minecraft/class_761;method_22710(Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;Lnet/minecraft/class_1159;)V"
+      }
+    }
+  }
+}
