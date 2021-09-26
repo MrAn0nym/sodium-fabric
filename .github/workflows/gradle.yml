@@ -27,6 +27,12 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
         cd build/libs
+        rm ../*.jar
+        mv *sources-dev.jar ../sodium-fabric-latest-sources-dev.jar
+        mv *sources.jar ../sodium-fabric-latest-sources.jar
+        mv *dev.jar ../sodium-fabric-latest-dev.jar
+        mv *.jar ../sodium-fabric-latest.jar
+        rm -r ../libs
         git add * -f || true
         git commit -m "Update .jar"
         git push 
