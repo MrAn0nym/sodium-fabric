@@ -26,12 +26,8 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
-        ls
-        cd build
-        ls
-        cd libs
-        ls
-        git add * || true
+        cd build/libs
+        git add * -f || true
         git commit -m "Update .jar"
         git push 
     - name: Upload build artifacts
