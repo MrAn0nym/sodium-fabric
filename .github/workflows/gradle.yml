@@ -22,6 +22,14 @@ jobs:
       run: cd ./Iris && ./gradlew publishToMavenLocal && cd ..
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Save jars to repo
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "github-actions"
+        cd ./build/libs
+        git add *
+        git commit -m "Update .jar"
+        git push 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
