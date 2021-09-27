@@ -32,10 +32,10 @@ jobs:
     - name: Rename files
       run: |
         cd build/libs
-        mv *sources-dev.jar ../sodium-fabric-latest-sources-dev.jar
-        mv *sources.jar ../sodium-fabric-latest-sources.jar
-        mv *dev.jar ../sodium-fabric-latest-dev.jar
-        mv *.jar ../sodium-fabric-latest.jar
+        mv *sources-dev.jar ../sodium-fabric-starline-sources-dev.jar
+        mv *sources.jar ../sodium-fabric-starline-sources.jar
+        mv *dev.jar ../sodium-fabric-starline-dev.jar
+        mv *.jar ../sodium-fabric-starline.jar
         rm -r ../libs || true
     - name: Save jars to repo
       run: |
