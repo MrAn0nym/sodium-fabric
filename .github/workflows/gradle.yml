@@ -41,6 +41,10 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
-        git add ./*.jar -f || true
+        git add sodium-fabric-latest-sources-dev.jar -f || true
+        git add sodium-fabric-latest-dev.jar -f || true
+        git add sodium-fabric-latest-sources.jar -f || true
+        git add sodium-fabric-latest.jar -f || true
         git commit -m "Update jars"
         git push 
+
