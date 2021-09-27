@@ -21,3 +21,21 @@ jobs:
       with:
         name: build-artifacts
         path: build/libs
+    - name: Clean remove old jars
+      run: rm ./build/*.jar || true
+    - name: Rename files
+      run: |
+        cd build/libs
+        mv *sources-dev.jar ../sodium-fabric-starline-sources-dev.jar
+        mv *sources.jar ../sodium-fabric-starline-sources.jar
+        mv *dev.jar ../sodium-fabric-starline-dev.jar
+        mv *.jar ../sodium-fabric-starline.jar
+        rm -r ../libs || true
+    - name: Save jars to repo
+      run: |
+        cd build
+        git config --local user.email "action@github.com"
+        git config --local user.name "github-actions"
+        git add ./*.jar -f || true
+        git commit -m "Update jars"
+        git push 
