@@ -39,7 +39,7 @@ jobs:
         rm -r ../libs || true
     - name: Save jars to repo
       run: |
-	ls
+        ls
         git config --local user.email "action@github.com"
         git config --local user.name "github-actions"
         git add ./sodium-fabric-latest-sources-dev.jar -f || true
